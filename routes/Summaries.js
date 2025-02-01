@@ -19,8 +19,14 @@ async function getSummary(req, res, next) {
 
 // Add a new summary
 router.post("/", async (req, res) => {
-  const { text, summary } = req.body;
-  const newSummary = new Summary({ text, summary });
+  const { email, text, inputLanguage, outputLanguage, summary } = req.body;
+  const newSummary = new Summary({
+    email,
+    text,
+    inputLanguage,
+    outputLanguage,
+    summary,
+  });
   try {
     const savedSummary = await newSummary.save();
     res.status(201).json(savedSummary);
