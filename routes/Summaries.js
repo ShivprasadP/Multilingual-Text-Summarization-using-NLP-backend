@@ -100,4 +100,27 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// search for summaries based on input text, output text, and email address
+router.post("/search", async (req, res) => {
+  const { email, searchText } = req.body;
+
+  try {
+    const summaries = await Summary.find({
+      email: email,
+      $or: [
+        { text: { $regex: searchText, $options: "i" } },
+        { summary: { $regex: searchText, $options: "i" } },
+      ],
+    });
+
+    if (summaries.length === 0) {
+      return res.status(404).json({ message: "No matching summaries found" });
+    }
+
+    res.json(summaries);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
